@@ -1,12 +1,12 @@
 ## ┌─────────────────────────────────────Tools─────────────────────────────────────┐
-## | la       List Aliases                 |                                       |
+## | la       List Aliases                 |  cm       Install Content Manager     |
 ## | dame     Reset Dameware               |                                       |
 ## | ad       Compare AD Groups            |                                       |
 ## | sw       Install Software             |                                       |
 ## | zbat     New Z Drive Batch File       |                                       |
 ## | rfix     Registry Fixes               |                                       |
 ## | psb      PowerShell Backup            |                                       |
-## |                                       |                                       |
+## | gpolicy  Remote GPUpdate /force       |                                       |
 ## └───────────────────────────────────────*───────────────────────────────────────┘
 
 [System.Collections.Generic.List[scriptblock]]$Global:Prompt = @(
@@ -22,9 +22,6 @@
 { "$F;15m$B;160m{0}" -f $('{0:d4}' -f $MyInvocation.HistoryId) }
 { "$B;13m$F;160m{0}" -f $([char]0x25ba) }
 
-{ "$B;13m$F;15m{0}" -f $("$([char]187)" + $pushd ) }
-{ "$F;13m$B;2m{0}" -f $([char]0x25ba) }
-
 { "$B;2m$F;15m{0}" -f $($pwd.Drive.Name) }
 { "$B;20m$F;2m{0}" -f $([char]0x25ba) }
 
@@ -38,7 +35,6 @@ $global:er = if ($?){22}else{1}
 $E = "$([char]27)"
 $F = "$E[38;5"
 $B = "$E[48;5"
-$pushd = (Get-Location -Stack).Count
 -join $Global:Prompt.Invoke()
 } 
 
@@ -53,6 +49,8 @@ Set-Alias ad Compare-ADGroups
 Set-Alias sw Install-Software
 Set-Alias zbat New-ZDriveBat
 Set-Alias rfix Set-RegFix
+Set-Alias gpolicy Remote-GPUpdate
+Set-Alias cm Install-ContentManager
 Set-Alias ls Get-ChildItemColor -option AllScope -Force
 Set-Alias dir Get-ChildItemColor -option AllScope -Force
 
