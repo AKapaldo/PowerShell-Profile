@@ -1,13 +1,14 @@
 ## ┌─────────────────────────────────────Tools─────────────────────────────────────┐
-## | la       List Aliases                 |  cm       Install Content Manager     |
-## | dame     Reset Dameware               |                                       |
-## | ad       Compare AD Groups            |                                       |
+## | la       List Aliases                 |   cm        Install Content Manager   |
+## | dame     Reset Dameware               |   O365      Check Exchange Licenses   |
+## | ad       Compare AD Groups            |   ADGroup   Export AD Group Members   |
 ## | sw       Install Software             |                                       |
 ## | zbat     New Z Drive Batch File       |                                       |
 ## | rfix     Registry Fixes               |                                       |
 ## | psb      PowerShell Backup            |                                       |
-## | gpolicy  Remote GPUpdate /force       |                                       |
+## | gpolicy  Remote GPUpdate /Force       |                                       |
 ## └───────────────────────────────────────*───────────────────────────────────────┘
+
 
 [System.Collections.Generic.List[scriptblock]]$Global:Prompt = @(
 # Right Aligned
@@ -20,7 +21,7 @@
 
 # Left Aligned
 { "$F;15m$B;160m{0}" -f $('{0:d4}' -f $MyInvocation.HistoryId) }
-{ "$B;13m$F;160m{0}" -f $([char]0x25ba) }
+{ "$F;160m$B;2m{0}" -f $([char]0x25ba) }
 
 { "$B;2m$F;15m{0}" -f $($pwd.Drive.Name) }
 { "$B;20m$F;2m{0}" -f $([char]0x25ba) }
@@ -44,25 +45,35 @@ Function la {
 }
 
 # Set Aliases
+$o365path = <PATH HERE>
+$adgrouppath = <PATH HERE>
 Set-Alias dame Reset-Dameware
 Set-Alias ad Compare-ADGroups
 Set-Alias sw Install-Software
 Set-Alias zbat New-ZDriveBat
 Set-Alias rfix Set-RegFix
-Set-Alias gpolicy Remote-GPUpdate
+Set-Alias gpolicy Remote-GPupdate
 Set-Alias cm Install-ContentManager
+Set-Alias psb Backup-PS
 Set-Alias ls Get-ChildItemColor -option AllScope -Force
 Set-Alias dir Get-ChildItemColor -option AllScope -Force
+Set-Alias O365 $o365path
+Set-Alias ADGroup $adgrouppath
+
 
 # Set PSReadLineOptions
 Set-PSReadLineOption -BellStyle None
 
+# Set Colors
+$console = $host.ui.rawui
+$console.backgroundcolor = "DarkMagenta"
+
 # Transcribe Daily log
-$User = Invoke-Command -ComputerName $ComputerName -ScriptBlock {(Get-WMIObject -class Win32_ComputerSystem | select -expand username)}
-$path = "C:\Users\$user\Documents\WindowsPowerShell\Logs"
+$username = <USERNAME HERE>
+$path = "C:\Users\$username\Documents\WindowsPowerShell\Logs"
 $date = Get-Date -format "MM_dd_yyyy"
-$TranscriptTest = Test-Path "C:\Users\$user\Documents\WindowsPowerShell\Logs\PS_$date.txt"
-$TranscriptFile = "C:\Users\$user\Documents\WindowsPowerShell\Logs\PS_$date.txt"
+$TranscriptTest = Test-Path "C:\Users\$username\Documents\WindowsPowerShell\Logs\PS_$date.txt"
+$TranscriptFile = "C:\Users\$username\Documents\WindowsPowerShell\Logs\PS_$date.txt"
 IF ($TranscriptTest -eq $True) {
 Start-Transcript -Path $TranscriptFile -Append}
 ELSE { New-Item -itemtype "file" -path $path -Name PS_$date.txt
